@@ -7,7 +7,7 @@ from queue import Empty
 
 import time
 
-rate = 48000
+rate = 44100
 fpb = 2048 #frames per buffer
 
 p = pa.PyAudio()
@@ -28,7 +28,7 @@ def input_target(audio_queue, stop_event):
       input_stream.stop_stream()
       input_stream.close()
       break
-    audio_queue.put(input_stream.read(fpb, exception_on_overflow=True))
+    audio_queue.put(input_stream.read(fpb, exception_on_overflow=False))
 
 
 def output_target(audio_queue, stop_event):
@@ -46,7 +46,7 @@ def output_target(audio_queue, stop_event):
       output_stream.close()
       break
     try:
-      samples = audio_queue.get_nowait()
+      samples = audio_queue.get()
       output_stream.write(samples)
     except Empty:
       time.sleep(0.001)
