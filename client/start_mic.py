@@ -1,19 +1,12 @@
 import subprocess
 
-import argparse
-import json
+from common import parse_args
 
-#load config file
-with open("config.json",'r') as f:
-  config = json.loads(f.read())
-
-host_default = config['host']
-
-parser = argparse.ArgumentParser()
-parser.add_argument("--host", default=host_default, nargs="?", type=str, 
-                    help="Host that rpi-aux-mic is installed on")
-
-args = parser.parse_args()
+args = parse_args
+pid_file = args.pid_file
 host = args.host
 
-subprocess.check_output(["ssh", "-q", "%s" % (host), "python3", "~/rpi-aux-mic/host/echo.py"])
+#start the mic program in the background and save the PID
+subprocess.check_output(["ssh", "-q", "%s" % (host), 
+                        "python3", "~/rpi-aux-mic/host/echo.py", "&", ";",
+                        "echo", "$!", ">", "~/rpi-aux-mic/host/MICPID_FILE"])
