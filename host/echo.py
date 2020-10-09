@@ -7,7 +7,7 @@ from queue import Empty
 
 import time
 
-rate = 48000
+rate = 44100
 fpb = 2048 #frames per buffer
 
 p = pa.PyAudio()
