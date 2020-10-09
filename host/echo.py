@@ -11,7 +11,7 @@ from queue import Empty
 import time
 
 rate = 48000
-fpb = 48 #frames per buffer
+fpb = 8 #frames per buffer
 
 def input_target(audio_queue, stop_event):
   #open input stream from MATRIX Voice
