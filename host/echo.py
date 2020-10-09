@@ -32,7 +32,7 @@ def input_target(audio_queue, stop_event):
 
 def output_target(audio_queue, stop_event):
   #open default output stream (the analog output) as mono
-  input_stream = aa.PCM(type=aa.PCM_PLAYBACK, mode = aa.PCM_NORMAL,
+  output_stream = aa.PCM(type=aa.PCM_PLAYBACK, mode = aa.PCM_NORMAL,
                         rate = rate, channels=1, format = aa.PCM_FORMAT_S16_LE,
                         periodsize=fpb);
   
