@@ -10,8 +10,8 @@ from queue import Empty
 
 import time
 
-rate = 44100
-fpb = 2048 #frames per buffer
+rate = 48000
+fpb = 48 #frames per buffer
 
 def input_target(audio_queue, stop_event):
   #open input stream from MATRIX Voice
@@ -23,8 +23,6 @@ def input_target(audio_queue, stop_event):
   #read audio until program end
   while True:
     if stop_event.is_set():
-      input_stream.stop_stream()
-      input_stream.close()
       break
     (length, data) = input_stream.read()
     audio_queue.put(data)
@@ -39,8 +37,6 @@ def output_target(audio_queue, stop_event):
   #play audio until told to stop. Hopefully can handle incoming audio rate
   while True:
     if stop_event.is_set():
-      output_stream.stop_stream()
-      output_stream.close()
       break
     try:
       samples = audio_queue.get()
@@ -54,8 +50,6 @@ audio_queue = SimpleQueue()
 #close streams on interrupt
 def interrupt_handler(signum, sigframe):
   stop_event.set()
-  
-  p.terminate()
   exit(0)
 signal.signal(signal.SIGINT, interrupt_handler)
 
