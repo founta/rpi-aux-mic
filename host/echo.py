@@ -1,4 +1,7 @@
-import pyaudio as pa
+#import pyaudio as pa
+
+import alsaaudio as aa
+
 import signal
 
 import multiprocessing as mp
@@ -10,17 +13,12 @@ import time
 rate = 44100
 fpb = 2048 #frames per buffer
 
-p = pa.PyAudio()
-
 def input_target(audio_queue, stop_event):
   #open input stream from MATRIX Voice
   #input device 14 is the beamformed input from the MATRIX Voice
-  input_stream = p.open(format = pa.paInt16,
-           channels = 1,
-           rate = rate,
-           input=True,
-           frames_per_buffer = fpb,
-           input_device_index=14);
+  input_stream = aa.PCM(type=aa.PCM_CAPTURE, mode = aa.PCM_NORMAL,
+                        rate = rate, channels=1, format = aa.PCM_FORMAT_S16_LE,
+                        device="channel_8", periodsize=fpb);
   
   #read audio until program end
   while True:
@@ -28,16 +26,15 @@ def input_target(audio_queue, stop_event):
       input_stream.stop_stream()
       input_stream.close()
       break
-    audio_queue.put(input_stream.read(fpb, exception_on_overflow=False))
+    (length, data) = input_stream.read()
+    audio_queue.put(data)
 
 
 def output_target(audio_queue, stop_event):
   #open default output stream (the analog output) as mono
-  output_stream = p.open(format = pa.paInt16,
-                         channels = 1,
-                         rate = rate,
-                         output=True,
-                         frames_per_buffer = fpb)
+  input_stream = aa.PCM(type=aa.PCM_PLAYBACK, mode = aa.PCM_NORMAL,
+                        rate = rate, channels=1, format = aa.PCM_FORMAT_S16_LE,
+                        periodsize=fpb);
   
   #play audio until told to stop. Hopefully can handle incoming audio rate
   while True:
