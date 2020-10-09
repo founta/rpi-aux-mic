@@ -2,7 +2,7 @@ import subprocess
 
 from common import parse_args
 
-args = parse_args
+args = parse_args()
 pid_file = args.pid_file
 host = args.host
 

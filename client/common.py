@@ -7,7 +7,7 @@ def parse_args():
     config = json.loads(f.read())
 
   host_default = config['host']
-  pidfile_default = config['pid_file']
+  pid_file_default = config['pid_file']
 
   parser = argparse.ArgumentParser()
   parser.add_argument("--host", default=host_default, nargs="?", type=str, 

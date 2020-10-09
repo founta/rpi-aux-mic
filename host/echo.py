@@ -2,7 +2,7 @@ import pyaudio as pa
 import signal
 
 import multiprocessing as mp
-from multiprocessing.queues import SimpleQueue
+from multiprocessing import SimpleQueue
 from queue import Empty
 
 import time
