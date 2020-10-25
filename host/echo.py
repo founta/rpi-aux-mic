@@ -6,12 +6,12 @@ import signal
 
 import multiprocessing as mp
 from multiprocessing import SimpleQueue
-from queue import Empty
+from queue import Empty #exception
 
 import time
 
 rate = 48000
-fpb = 48 #frames per buffer
+fpb = 128 #frames per buffer
 
 def input_target(audio_queue, stop_event):
   #open input stream from MATRIX Voice
@@ -25,16 +25,19 @@ def input_target(audio_queue, stop_event):
     if stop_event.is_set():
       break
     (length, data) = input_stream.read()
+#    if (length < 0):
+#      print("U",end="")
     audio_queue.put(data)
 
 
 def output_target(audio_queue, stop_event):
   #open default output stream (the analog output) as mono
-  output_stream = aa.PCM(type=aa.PCM_PLAYBACK, mode = aa.PCM_NORMAL,
+  output_stream = aa.PCM(type=aa.PCM_PLAYBACK, mode = aa.PCM_NONBLOCK,
                         rate = rate, channels=1, format = aa.PCM_FORMAT_S16_LE,
                         periodsize=fpb);
   
   #play audio until told to stop. Hopefully can handle incoming audio rate
+  #spoiler alert it can't
   while True:
     if stop_event.is_set():
       break

@@ -1,3 +1,4 @@
 {
-  "host":"pi@pimic.local"
+  "host":"pi@pimic.local",
+  "pid_file":"/home/pi/rpi-aux-mic/host/PIDFILE"
 }

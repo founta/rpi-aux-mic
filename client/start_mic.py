@@ -7,5 +7,6 @@ pid_file = args.pid_file
 host = args.host
 
 #start the mic program in the background and save the PID
-subprocess.check_output(["ssh", "-q", "%s" % (host), 
-                         "python3", "~/rpi-aux-mic/host/echo.py"])
+subprocess.run(["ssh", "%s" % (host), 
+                "nohup", "python3", "~/rpi-aux-mic/host/audio_main.py", "&>", "/dev/null", "&",
+                "echo", "$!", ">", "%s" % (pid_file)])
